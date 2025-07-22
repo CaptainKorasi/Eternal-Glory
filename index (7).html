@@ -1,0 +1,915 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eternal Glory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: 
+                linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+                url('https://travelnevada.com/wp-content/uploads/2014/04/Caesars_Desktop-scaled.jpg') center/cover fixed;
+            color: #f0e6d2;
+            min-height: 100vh;
+        }
+        
+        .title-font {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .card-red {
+            color: #ff3333;
+            text-shadow: 0 0 5px rgba(255, 51, 51, 0.7);
+        }
+        
+        .card-black {
+            color: #111111;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        .card-bg {
+            background: #f8f5e6;
+            border-radius: 10px;
+            border: 2px solid #3a2a1a;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), 
+                        inset 0 0 10px rgba(100, 70, 30, 0.3),
+                        0 0 0 2px #6b4a2a;
+            padding: 15px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            min-width: 80px;
+            min-height: 120px;
+            margin: 5px;
+            position: relative;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card-bg:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4), 
+                        inset 0 0 0 1px rgba(255,255,255,0.8),
+                        0 0 0 2px #5e2c04;
+        }
+        .card-bg:before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 3px;
+            pointer-events: none;
+        }
+
+        @keyframes sparkle {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+            100% { transform: translate(random(100) - 50px, random(100) - 50px) scale(0); opacity: 0; }
+        }
+
+        .animate-sparkle {
+            animation: sparkle 1.5s ease-out infinite;
+        }
+
+        .slot-machine-frame {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slot-machine-frame:before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(45deg, 
+                rgba(255,215,0,0.1) 0%, 
+                rgba(255,255,255,0.2) 50%, 
+                rgba(255,215,0,0.1) 100%);
+            z-index: -1;
+            border-radius: 16px;
+        }
+        
+        .glow {
+            text-shadow: 0 0 5px rgba(210, 105, 30, 0.8), 0 0 15px rgba(218, 165, 32, 0.6);
+        }
+        
+        .button-glow {
+            box-shadow: 0 0 10px rgba(184, 134, 11, 0.6);
+        }
+        
+        .button-glow:hover {
+            box-shadow: 0 0 15px rgba(218, 165, 32, 0.8), inset 0 0 5px rgba(255, 215, 0, 0.5);
+        }
+        
+        .jackpot-animation {
+            animation: pulse 1.5s infinite, glow 2s infinite alternate;
+        }
+        @keyframes glow {
+            from { box-shadow: 0 0 20px rgba(255,215,0,0.5); }
+            to { box-shadow: 0 0 40px rgba(255,215,0,0.9); }
+        }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            animation: fall 5s linear forwards;
+        }
+        @keyframes fall {
+            to { transform: translateY(100vh) rotate(720deg); }
+        }
+        .coin-drop {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle at 30% 30%, #FFD700, #D4AF37);
+            border-radius: 50%;
+            animation: drop 1.5s ease-in forwards;
+        }
+        @keyframes drop {
+            to { transform: translateY(100px) rotate(180deg); opacity: 0; }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .card-reveal {
+            animation: flip 0.6s ease-out;
+        }
+        
+        @keyframes flip {
+            0% { 
+                transform: rotateY(0deg) scale(1);
+                background: url('https://www.transparenttextures.com/patterns/playing-card-back.png') center/cover;
+            }
+            49% { 
+                transform: rotateY(90deg) scale(1.05);
+                background: url('https://www.transparenttextures.com/patterns/playing-card-back.png') center/cover;
+            }
+            51% { 
+                transform: rotateY(90deg) scale(1.05);
+                background: white;
+            }
+            100% { 
+                transform: rotateY(0deg) scale(1);
+                background: white;
+            }
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center p-4">
+    <div id="app" class="w-full max-w-md mx-auto">
+        <!-- Start Screen -->
+        <div id="start-screen" class="text-center">
+            <h1 class="title-font text-5xl md:text-6xl font-bold mb-6 text-amber-500 glow" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">Eternal Glory</h1>
+            <div class="rounded-xl p-8 mb-8 border-4 border-amber-900" style="
+                background: 
+                    url('https://www.transparenttextures.com/patterns/wood-pattern.png'),
+                    linear-gradient(to bottom, #3a2a1a, #2a1a0a);
+                box-shadow: 
+                    0 0 30px rgba(0,0,0,0.9),
+                    inset 0 0 20px rgba(0,0,0,0.5);
+                border-image: linear-gradient(to bottom, #8b5a2b, #5d3a1a) 1;
+            ">
+                <div class="bg-yellow-900 bg-opacity-50 rounded-lg p-4 mb-6 border border-yellow-600">
+                    <p class="text-sm text-yellow-200">Spin to set your</p>
+                    <p class="text-2xl font-bold text-yellow-300 glow jackpot-amount">JACKPOT</p>
+                </div>
+                <p class="text-lg mb-4">Answer 5 questions correctly to win the JACKPOT!</p>
+                <p class="text-sm text-gray-300 mb-6">Guess the card's color, value, suit, and finally the exact card.</p>
+                <div id="current-reward" class="hidden bg-gray-800 rounded-lg p-3 mt-4 border border-gray-600">
+                    <p class="text-sm text-gray-300">Your current reward:</p>
+                    <p id="reward-amount" class="text-xl font-bold text-yellow-400">0 COINS</p>
+                </div>
+                <div class="flex flex-col space-y-4">
+                    <button id="play-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-full text-lg transition-all duration-300 shadow-lg" style="box-shadow: 0 5px 15px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.3);">
+                        PLAY ETERNAL GLORY <i class="fas fa-play ml-2"></i>
+                    </button>
+                    <button id="play-lucky-spin-btn" class="bg-yellow-600 hover:bg-yellow-700 text-black font-bold py-3 px-8 rounded-full text-lg button-glow transition-all duration-300">
+                        SPIN TO SET YOUR JACKPOT <i class="fas fa-coins ml-2"></i>
+                    </button>
+                    <button id="play-rigged-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full text-lg button-glow transition-all duration-300">
+                        RIGGED GAME <i class="fas fa-dice ml-2"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="text-xs text-gray-500 mt-4">
+                <p>For entertainment purposes only. No real money involved.</p>
+            </div>
+        </div>
+        
+        <!-- Lucky Spin Screen -->
+        <div id="lucky-spin-screen" class="hidden text-center">
+            <div class="slot-machine-container relative mx-auto max-w-md">
+                <div class="slot-machine-frame bg-gray-900 p-6 rounded-xl border-4 border-yellow-500 shadow-2xl" style="
+                    background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 10px rgba(255,215,0,0.3);
+                ">
+                    <div class="slot-reels flex justify-center gap-2 mb-6">
+                        <div class="slot-reel bg-gray-800 rounded-lg overflow-hidden border-2 border-yellow-600 w-24 h-32 flex items-center justify-center text-5xl">
+                            <span id="reel1">🍒</span>
+                        </div>
+                        <div class="slot-reel bg-gray-800 rounded-lg overflow-hidden border-2 border-yellow-600 w-24 h-32 flex items-center justify-center text-5xl">
+                            <span id="reel2">🍋</span>
+                        </div>
+                        <div class="slot-reel bg-gray-800 rounded-lg overflow-hidden border-2 border-yellow-600 w-24 h-32 flex items-center justify-center text-5xl">
+                            <span id="reel3">🔔</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-center">
+                        <button id="spin-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-full text-lg transition-all duration-300 shadow-lg">
+                            SPIN <i class="fas fa-sync-alt ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="win-banner" class="hidden text-center mt-6 mb-4">
+                    <div class="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-bold text-3xl md:text-4xl py-4 px-8 rounded-full inline-block shadow-lg glow jackpot-animation">
+                        MEGA WIN!
+                    </div>
+                    <div id="base-amount" class="hidden text-3xl font-bold text-yellow-300 mt-4 glow">
+                        9,560,000 COINS
+                    </div>
+                    <div id="multiplier" class="hidden text-4xl font-bold text-red-500 mt-4 glow" style="text-shadow: 0 0 10px rgba(255,0,0,0.7);">
+                        × 50 MULTIPLIER!
+                    </div>
+                    <div id="final-jackpot" class="hidden text-3xl font-bold text-yellow-300 mt-4 glow">
+                        Your ETERNAL GLORY jackpot: <span class="text-4xl">478,000,000 COINS</span>
+                    </div>
+                </div>
+                
+                <button id="start-game-btn" class="hidden bg-yellow-600 hover:bg-yellow-700 text-black font-bold py-3 px-8 rounded-full text-lg button-glow transition-all duration-300 mb-4">
+                    PLAY ETERNAL GLORY <i class="fas fa-play ml-2"></i>
+                </button>
+                <button id="lucky-spin-back-btn" class="text-gray-400 hover:text-white mt-6">
+                    <i class="fas fa-arrow-left mr-2"></i> Back to Menu
+                </button>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="hidden text-center">
+            <div class="flex justify-between items-center mb-6">
+                <div class="text-left">
+                    <p class="text-sm text-gray-400">Question</p>
+                    <p id="question-number" class="text-xl font-bold text-yellow-400">1/5</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-sm text-gray-400">Potential Reward</p>
+                    <p id="potential-reward" class="text-xl font-bold text-yellow-400">0 COINS</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-sm text-gray-400">Cards Left</p>
+                    <p id="cards-left" class="text-xl font-bold">52</p>
+                </div>
+            </div>
+            
+            <div class="bg-black bg-opacity-70 rounded-xl p-6 mb-6 border border-yellow-500 min-h-40 flex flex-col justify-center">
+                <div id="previous-cards" class="flex justify-center space-x-2 mb-4"></div>
+                <p id="question-text" class="text-xl font-semibold mb-6">Is the next card Red or Black?</p>
+                <div id="answer-options" class="grid grid-cols-2 gap-4">
+                    <!-- Options will be inserted here by JavaScript -->
+                </div>
+            </div>
+            
+            <button id="back-btn" class="text-gray-400 hover:text-white mt-4">
+                <i class="fas fa-arrow-left mr-2"></i> Back to Menu
+            </button>
+        </div>
+        
+        <!-- Jackpot Screen -->
+        <div id="jackpot-screen" class="hidden text-center">
+            <div class="rounded-xl p-8 mb-8 border-4 border-amber-800 jackpot-animation" style="
+                background: 
+                    url('https://www.transparenttextures.com/patterns/wood-pattern.png'),
+                    linear-gradient(to bottom, #5d3a1a, #3a1a0a);
+                box-shadow: 
+                    0 0 40px rgba(139, 69, 19, 0.7),
+                    inset 0 0 30px rgba(210, 105, 30, 0.5);
+                border-image: linear-gradient(to bottom, #d2a679, #8b4513) 1;
+            ">
+                <h1 class="title-font text-5xl md:text-6xl font-bold mb-6 text-white glow">JACKPOT!</h1>
+                <p class="text-xl mb-6">You've won <span class="font-bold">478,000,000 COINS</span>!</p>
+                <div class="flex justify-center mb-8">
+                    <div class="bg-black bg-opacity-50 p-4 rounded-lg">
+                        <p class="text-sm text-gray-300">Winning Card</p>
+                        <p id="winning-card" class="text-4xl font-bold my-2 card-reveal"></p>
+                    </div>
+                </div>
+                <div class="flex justify-center space-x-4 mb-8" id="all-cards"></div>
+            </div>
+            <button id="play-again-btn" class="bg-yellow-600 hover:bg-yellow-700 text-black font-bold py-3 px-8 rounded-full text-lg button-glow transition-all duration-300 mb-4">
+                PLAY AGAIN <i class="fas fa-redo ml-2"></i>
+            </button>
+            <button id="menu-btn" class="text-gray-400 hover:text-white block mx-auto mt-4">
+                <i class="fas fa-home mr-2"></i> Back to Menu
+            </button>
+        </div>
+        <!-- Fail Screen (initially hidden) -->
+        <div id="fail-screen" class="hidden text-center">
+            <div class="bg-white shadow-xl rounded-xl p-8 border-4 border-red-400">
+                <h2 class="text-3xl font-bold text-red-600 mb-4">Oh no! 😢</h2>
+                <p class="text-lg text-gray-800 mb-2">You answered <span id="fail-score">0</span> questions correctly.</p>
+                <p class="text-lg font-bold text-yellow-600 mb-4" id="reward-message">
+                    <span id="fail-reward">0</span> COINS!
+                </p>
+                <button id="fail-menu-btn" class="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-6 rounded-full button-glow">
+                    Back to Menu
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const startScreen = document.getElementById('start-screen');
+            const luckySpinScreen = document.getElementById('lucky-spin-screen');
+            const gameScreen = document.getElementById('game-screen');
+            const jackpotScreen = document.getElementById('jackpot-screen');
+            const playBtn = document.getElementById('play-btn');
+            const backBtn = document.getElementById('back-btn');
+            const playAgainBtn = document.getElementById('play-again-btn');
+            const menuBtn = document.getElementById('menu-btn');
+            const questionText = document.getElementById('question-text');
+            const failScreen = document.getElementById('fail-screen');
+const failMenuBtn = document.getElementById('fail-menu-btn');
+const failScore = document.getElementById('fail-score');
+            const questionNumber = document.getElementById('question-number');
+            const cardsLeft = document.getElementById('cards-left');
+            const answerOptions = document.getElementById('answer-options');
+            const previousCards = document.getElementById('previous-cards');
+            const winningCard = document.getElementById('winning-card');
+            const allCards = document.getElementById('all-cards');
+            
+            // Game state
+            let deck = [];
+            let currentCardIndex = 0;
+            let currentQuestion = 1;
+            let previousCardValues = [];
+            let correctAnswers = 0;
+            let isRiggedMode = false;
+            const rewardPercentages = [0, 0, 0, 0, 100, 100]; // 0% until 4 correct, then 100%
+            const jackpotAmount = 1000000; // 1 million coins
+            
+            // Card suits and values
+            const suits = ['♠', '♣', '♦', '♥'];
+            const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+            const suitNames = {
+                '♠': 'Spades',
+                '♣': 'Clubs',
+                '♦': 'Diamonds',
+                '♥': 'Hearts'
+            };
+            
+            // Initialize game
+            playBtn.addEventListener('click', () => {
+                startScreen.classList.add('hidden');
+                gameScreen.classList.remove('hidden');
+                startGame();
+            });
+            
+            const spinBtn = document.getElementById('spin-btn');
+            const luckySpinBackBtn = document.getElementById('lucky-spin-back-btn');
+            const winBanner = document.getElementById('win-banner');
+            const startGameBtn = document.getElementById('start-game-btn');
+            
+            // Reset slot machine when returning to it
+            function resetSlotMachine() {
+                document.getElementById('reel1').textContent = '🍒';
+                document.getElementById('reel2').textContent = '🍋';
+                document.getElementById('reel3').textContent = '🔔';
+                winBanner.classList.add('hidden');
+                startGameBtn.classList.add('hidden');
+                spinBtn.disabled = false;
+                luckySpinBackBtn.classList.remove('hidden');
+            }
+            
+            // Lucky Spin button
+            document.getElementById('play-lucky-spin-btn').addEventListener('click', () => {
+                startScreen.classList.add('hidden');
+                luckySpinScreen.classList.remove('hidden');
+                resetSlotMachine();
+            });
+
+            // Rigged Game button
+            document.getElementById('play-rigged-btn').addEventListener('click', () => {
+                isRiggedMode = true;
+                startScreen.classList.add('hidden');
+                gameScreen.classList.remove('hidden');
+                startGame();
+            });
+            
+            // Spin button handler
+            spinBtn.addEventListener('click', startSpin);
+            luckySpinBackBtn.addEventListener('click', returnToMenu);
+            startGameBtn.addEventListener('click', () => {
+                luckySpinScreen.classList.add('hidden');
+                gameScreen.classList.remove('hidden');
+                startGame();
+            });
+            
+            failMenuBtn.addEventListener('click', returnToMenu);
+            backBtn.addEventListener('click', returnToMenu);
+            playAgainBtn.addEventListener('click', startGame);
+            menuBtn.addEventListener('click', returnToMenu);
+            
+            let currentJackpot = 478000000; // Default 478 million
+
+            function startSpin() {
+                spinBtn.disabled = true;
+                luckySpinBackBtn.classList.add('hidden');
+                startGameBtn.classList.add('hidden');
+                winBanner.classList.add('hidden');
+                document.getElementById('base-amount').classList.add('hidden');
+                document.getElementById('multiplier').classList.add('hidden');
+                document.getElementById('final-jackpot').classList.add('hidden');
+                
+                const reels = [
+                    document.getElementById('reel1'),
+                    document.getElementById('reel2'),
+                    document.getElementById('reel3')
+                ];
+                
+                const symbols = ['🍒', '🍋', '🔔', '🍇', '🍉', '⭐'];
+                const spinDuration = 3000; // 3 seconds
+                const startTime = Date.now();
+                
+                // Initial random positions
+                reels.forEach(reel => {
+                    reel.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                });
+                
+                // Smooth spin animation
+                const spinInterval = setInterval(() => {
+                    const elapsed = Date.now() - startTime;
+                    const progress = Math.min(elapsed / spinDuration, 1);
+                    
+                    if (progress >= 1) {
+                        clearInterval(spinInterval);
+                        // All reels land on cherry
+                        reels.forEach(reel => reel.textContent = '🍒');
+                        
+                        // Show win sequence
+                        winBanner.classList.remove('hidden');
+                        
+                        // Show base amount after delay
+                        setTimeout(() => {
+                            document.getElementById('base-amount').classList.remove('hidden');
+                            
+                            // Show multiplier after another delay
+                            setTimeout(() => {
+                                document.getElementById('multiplier').classList.remove('hidden');
+                                
+                                // Calculate and show final jackpot
+                                setTimeout(() => {
+                                    currentJackpot = 9560000 * 50;
+                                    document.getElementById('final-jackpot').classList.remove('hidden');
+                                    document.getElementById('final-jackpot').querySelector('span').textContent = 
+                                        currentJackpot.toLocaleString() + ' COINS';
+                                    
+                                    // Show start game button
+                                    startGameBtn.classList.remove('hidden');
+                                    
+                                    // Update main jackpot display
+                                    const jackpotDisplay = document.querySelector('.jackpot-amount');
+                                    jackpotDisplay.textContent = currentJackpot.toLocaleString() + ' COINS';
+                                    // Also update the label above it
+                                    document.querySelector('.text-yellow-200').textContent = 'Current Jackpot:';
+                                }, 1000);
+                            }, 1000);
+                        }, 1000);
+                        return;
+                    }
+                    
+                    // Update all reels simultaneously
+                    reels.forEach(reel => {
+                        // Faster spinning at start, slowing down near end
+                        if (Math.random() > progress * 0.8) {
+                            reel.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                        }
+                    });
+                }, 100);
+            }
+
+            function resetSlotMachine() {
+                document.getElementById('reel1').textContent = '🍒';
+                document.getElementById('reel2').textContent = '🍋';
+                document.getElementById('reel3').textContent = '🔔';
+                winBanner.classList.add('hidden');
+                document.getElementById('base-amount').classList.add('hidden');
+                document.getElementById('multiplier').classList.add('hidden');
+                document.getElementById('final-jackpot').classList.add('hidden');
+                startGameBtn.classList.add('hidden');
+                spinBtn.disabled = false;
+                luckySpinBackBtn.classList.remove('hidden');
+            }
+            
+            function startGame() {
+                // Reset game state
+                currentQuestion = 1;
+                correctAnswers = 0;
+                previousCardValues = [];
+                currentCardIndex = 0;
+                // Hide fail screen if visible
+                failScreen.classList.add('hidden');
+                // Hide current reward on start screen
+                document.getElementById('current-reward').classList.add('hidden');
+                // Update potential reward
+                updatePotentialReward();
+                // Create and shuffle deck
+                deck = createDeck();
+                shuffleDeck(deck);
+                
+                // Update UI
+                startScreen.classList.add('hidden');
+                gameScreen.classList.remove('hidden');
+                jackpotScreen.classList.add('hidden');
+                
+                // Show first question
+                showQuestion();
+            }
+            
+            function returnToMenu() {
+                gameScreen.classList.add('hidden');
+                jackpotScreen.classList.add('hidden');
+                failScreen.classList.add('hidden');
+                startScreen.classList.remove('hidden');
+                isRiggedMode = false;
+            }
+             // Hide fail screen if visible
+    failScreen.classList.add('hidden');
+            function createDeck() {
+                const deck = [];
+                for (const suit of suits) {
+                    for (const value of values) {
+                        deck.push({ suit, value });
+                    }
+                }
+                return deck;
+            }
+            
+            function shuffleDeck(deck) {
+                for (let i = deck.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [deck[i], deck[j]] = [deck[j], deck[i]];
+                }
+            }
+            
+            function updatePotentialReward() {
+                const potentialReward = Math.floor(jackpotAmount * rewardPercentages[correctAnswers] / 100);
+                document.getElementById('potential-reward').textContent = potentialReward.toLocaleString() + ' COINS';
+            }
+
+            function showQuestion() {
+                // Update question counter
+                questionNumber.textContent = `${currentQuestion}/5`;
+                // Update potential reward
+                updatePotentialReward();
+                cardsLeft.textContent = deck.length - currentCardIndex;
+                
+                // Clear previous options and cards
+                answerOptions.innerHTML = '';
+                previousCards.innerHTML = '';
+                
+                // Show previous cards if any
+                if (previousCardValues.length > 0) {
+                    previousCardValues.forEach((card, index) => {
+                        const cardElement = createCardElement(card);
+                        if (index === previousCardValues.length - 1) {
+                            cardElement.classList.add('border-2', 'border-yellow-400');
+                        }
+                        previousCards.appendChild(cardElement);
+                    });
+                }
+                
+                // Show current question
+                switch (currentQuestion) {
+                    case 1:
+                        questionText.textContent = "Is the next card Red or Black?";
+                        showRedBlackOptions();
+                        break;
+                    case 2:
+                        questionText.textContent = `Is the next card Higher or Lower than ${previousCardValues[0].value}?`;
+                        showHigherLowerOptions();
+                        break;
+                    case 3:
+                        const sortedValues = [previousCardValues[0].value, previousCardValues[1].value].sort((a, b) => 
+                            values.indexOf(a) - values.indexOf(b)
+                        );
+                        questionText.textContent = `Is the next card Inside or Outside ${sortedValues[0]} and ${sortedValues[1]}?`;
+                        showInsideOutsideOptions();
+                        break;
+                    case 4:
+                        questionText.textContent = "What is the suit of the next card?";
+                        showSuitOptions();
+                        break;
+                    case 5:
+                        questionText.textContent = "What is the exact next card?";
+                        showCardSelectors();
+                        break;
+                }
+            }
+            
+            function showRedBlackOptions() {
+                const options = [
+                    { text: "Red", value: "red" },
+                    { text: "Black", value: "black" }
+                ];
+                
+                options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.className = `bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 ${option.value === 'red' ? 'hover:text-red-300' : 'hover:text-gray-300'}`;
+                    button.textContent = option.text;
+                    button.addEventListener('click', () => checkAnswer(option.value));
+                    answerOptions.appendChild(button);
+                });
+            }
+            
+            function showHigherLowerOptions() {
+                const options = [
+                    { text: "Higher", value: "higher" },
+                    { text: "Lower", value: "lower" },
+                    { text: "Same", value: "same" }
+                ];
+                
+                options.forEach(option => {
+                    const button = document.createElement('button');
+                    let buttonClass = 'font-bold py-3 px-6 rounded-full transition-all duration-300 shadow-lg ';
+                    if (option.value === 'higher') {
+                        buttonClass += 'bg-green-700 hover:bg-green-600 text-white hover:text-green-100 border-2 border-green-500 hover:border-green-400 button-glow';
+                        button.innerHTML = '↑ ' + option.text;
+                    } else if (option.value === 'lower') {
+                        buttonClass += 'bg-red-700 hover:bg-red-600 text-white hover:text-red-100 border-2 border-red-500 hover:border-red-400 button-glow';
+                        button.innerHTML = '↓ ' + option.text;
+                    } else {
+                        buttonClass += 'bg-gray-800 hover:bg-gray-700 text-white hover:text-yellow-300';
+                        button.textContent = option.text;
+                    }
+                    button.className = buttonClass;
+                    button.addEventListener('click', () => checkAnswer(option.value));
+                    answerOptions.appendChild(button);
+                });
+            }
+            
+            function showInsideOutsideOptions() {
+                const options = [
+                    { text: "Inside", value: "inside" },
+                    { text: "Outside", value: "outside" }
+                ];
+                
+                options.forEach(option => {
+                    const button = document.createElement('button');
+                    let buttonClass = 'font-bold py-3 px-6 rounded-full transition-all duration-300 shadow-lg ';
+                    if (option.value === 'inside') {
+                        buttonClass += 'bg-blue-700 hover:bg-blue-600 text-white hover:text-blue-100 border-2 border-blue-500 hover:border-blue-400 button-glow';
+                        button.innerHTML = '→← ' + option.text;
+                    } else {
+                        buttonClass += 'bg-orange-600 hover:bg-orange-500 text-white hover:text-orange-100 border-2 border-orange-500 hover:border-orange-400 button-glow';
+                        button.innerHTML = '←→ ' + option.text;
+                    }
+                    button.className = buttonClass;
+                    button.addEventListener('click', () => checkAnswer(option.value));
+                    answerOptions.appendChild(button);
+                });
+            }
+            
+            function showSuitOptions() {
+                const remainingSuits = getRemainingSuits();
+                
+                remainingSuits.forEach(suit => {
+                    const button = document.createElement('button');
+                    const isRed = suit === '♦' || suit === '♥';
+                    const colorClass = isRed ? 'card-red' : 'card-black';
+                    
+                    button.className = `bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 ${colorClass}`;
+                    button.innerHTML = `${suit} ${suitNames[suit]}`;
+                    button.addEventListener('click', () => checkAnswer(suit));
+                    answerOptions.appendChild(button);
+                });
+            }
+function showCardSelectors() {
+    answerOptions.innerHTML = `
+        <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-4">
+            <div class="w-full md:w-1/2">
+                <label class="block text-gray-400 text-sm mb-2">Value</label>
+                <select id="card-value" class="w-full bg-gray-800 border border-gray-700 text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                    ${values.map(v => `<option value="${v}">${v}</option>`).join('')}
+                </select>
+            </div>
+            <div class="w-full md:w-1/2">
+                <label class="block text-gray-400 text-sm mb-2">Suit</label>
+                <select id="card-suit" class="w-full bg-gray-800 border border-gray-700 text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                    ${suits.map(s => `<option value="${s}">${s} ${suitNames[s]}</option>`).join('')}
+                </select>
+            </div>
+        </div>
+        <button id="confirm-guess" class="bg-yellow-600 hover:bg-yellow-700 text-black font-bold py-3 px-8 rounded-full text-lg button-glow transition-all duration-300 w-full">
+            CONFIRM GUESS
+        </button>
+    `;
+
+    // Ensure the DOM updates before attaching the listener
+    setTimeout(() => {
+        const confirmBtn = document.getElementById('confirm-guess');
+        if (confirmBtn) {
+            confirmBtn.addEventListener('click', () => {
+                const value = document.getElementById('card-value').value;
+                const suit = document.getElementById('card-suit').value;
+                checkAnswer(`${value}${suit}`);
+            });
+        }
+    }, 0);
+}
+            
+            function checkAnswer(answer) {
+                let currentCard = deck[currentCardIndex];
+                let isCorrect = false;
+                
+                // In rigged mode, modify the card to match the answer
+                if (isRiggedMode) {
+                    switch (currentQuestion) {
+                        case 1: // Red or Black
+                            const desiredSuit = answer === 'red' ? 
+                                (Math.random() > 0.5 ? '♦' : '♥') : 
+                                (Math.random() > 0.5 ? '♠' : '♣');
+                            currentCard = { suit: desiredSuit, value: currentCard.value };
+                            break;
+                        case 2: // Higher or Lower
+                            const prevValueIndex = values.indexOf(previousCardValues[0].value);
+                            let newValueIndex;
+                            if (answer === 'higher') {
+                                newValueIndex = Math.min(prevValueIndex + 1 + Math.floor(Math.random() * (values.length - prevValueIndex - 1)), values.length - 1);
+                            } else if (answer === 'lower') {
+                                newValueIndex = Math.max(prevValueIndex - 1 - Math.floor(Math.random() * prevValueIndex), 0);
+                            } else { // same
+                                newValueIndex = prevValueIndex;
+                            }
+                            currentCard = { suit: currentCard.suit, value: values[newValueIndex] };
+                            break;
+                        case 3: // Inside or Outside
+                            const firstIdx = values.indexOf(previousCardValues[0].value);
+                            const secondIdx = values.indexOf(previousCardValues[1].value);
+                            const minIdx = Math.min(firstIdx, secondIdx);
+                            const maxIdx = Math.max(firstIdx, secondIdx);
+                            let cardIdx;
+                            if (answer === 'inside') {
+                                cardIdx = minIdx + 1 + Math.floor(Math.random() * (maxIdx - minIdx - 1));
+                            } else {
+                                const options = [
+                                    ...Array(minIdx).keys(),
+                                    ...Array(values.length - maxIdx - 1).keys().map(i => i + maxIdx + 1)
+                                ];
+                                cardIdx = options[Math.floor(Math.random() * options.length)];
+                            }
+                            currentCard = { suit: currentCard.suit, value: values[cardIdx] };
+                            break;
+                        case 4: // Suit
+                            currentCard = { suit: answer, value: currentCard.value };
+                            break;
+                        case 5: // Exact card
+                            const suit = answer.slice(-1);
+                            const value = answer.slice(0, -1);
+                            currentCard = { suit, value };
+                            break;
+                    }
+                    // Update the deck with our modified card
+                    deck[currentCardIndex] = currentCard;
+                }
+                
+                switch (currentQuestion) {
+                    case 1: // Red or Black
+                        const isRed = currentCard.suit === '♦' || currentCard.suit === '♥';
+                        isCorrect = (answer === 'red' && isRed) || (answer === 'black' && !isRed);
+                        break;
+                    case 2: // Higher or Lower
+                        const currentValueIndex = values.indexOf(currentCard.value);
+                        const previousValueIndex = values.indexOf(previousCardValues[0].value);
+                        
+                        if (answer === 'higher') {
+                            isCorrect = currentValueIndex > previousValueIndex;
+                        } else if (answer === 'lower') {
+                            isCorrect = currentValueIndex < previousValueIndex;
+                        } else { // same
+                            isCorrect = currentValueIndex === previousValueIndex;
+                        }
+                        break;
+                    case 3: // Inside or Outside
+                        const cardValueIndex = values.indexOf(currentCard.value);
+                        const firstValueIndex = values.indexOf(previousCardValues[0].value);
+                        const secondValueIndex = values.indexOf(previousCardValues[1].value);
+                        
+                        const minIndex = Math.min(firstValueIndex, secondValueIndex);
+                        const maxIndex = Math.max(firstValueIndex, secondValueIndex);
+                        
+                        if (answer === 'inside') {
+                            isCorrect = cardValueIndex > minIndex && cardValueIndex < maxIndex;
+                        } else {
+                            isCorrect = cardValueIndex < minIndex || cardValueIndex > maxIndex;
+                        }
+                        break;
+                    case 4: // Suit
+                        isCorrect = answer === currentCard.suit;
+                        break;
+                    case 5: // Exact card
+                        isCorrect = answer === `${currentCard.value}${currentCard.suit}`;
+                        break;
+                }
+                
+                // Show the current card
+                const cardElement = createCardElement(currentCard);
+                cardElement.classList.add('card-reveal', 'border-2', isCorrect ? 'border-green-500' : 'border-red-500');
+                previousCards.appendChild(cardElement);
+                
+// Update game state
+                currentCardIndex++;
+                previousCardValues.push(currentCard);
+                
+                if (isRiggedMode || isCorrect) {
+                    correctAnswers++;
+                    updatePotentialReward();
+                    
+                    if (currentQuestion === 5) {
+                        // Player won the jackpot!
+                        showJackpot();
+                    } else {
+                        // Move to next question
+                        currentQuestion++;
+                        setTimeout(showQuestion, 1500);
+                    }
+                } else {
+                    // Player got it wrong, show reward
+                    const reward = Math.floor(jackpotAmount * rewardPercentages[correctAnswers] / 100);
+                    setTimeout(() => {
+                        gameScreen.classList.add('hidden');
+                        failScore.textContent = correctAnswers;
+                        const rewardMessage = document.getElementById('reward-message');
+                        if (correctAnswers >= 4) {
+                            document.getElementById('fail-reward').textContent = reward.toLocaleString();
+                            rewardMessage.innerHTML = `You won <span class="text-green-500">${reward.toLocaleString()}</span> COINS!`;
+                        } else {
+                            rewardMessage.innerHTML = 'Answer 4+ questions correctly to win!';
+                        }
+                        failScreen.classList.remove('hidden');
+                        
+                        // Show current reward on start screen
+                        if (reward > 0) {
+                            const currentReward = document.getElementById('current-reward');
+                            const rewardAmount = document.getElementById('reward-amount');
+                            currentReward.classList.remove('hidden');
+                            rewardAmount.textContent = reward.toLocaleString() + ' COINS';
+                        }
+                    }, 1500);
+
+                }
+            }
+            
+            function showJackpot() {
+                gameScreen.classList.add('hidden');
+                jackpotScreen.classList.remove('hidden');
+                
+                // Show the winning card
+                const winningCardObj = previousCardValues[4];
+                winningCard.textContent = `${winningCardObj.value}${winningCardObj.suit}`;
+                winningCard.className = 'text-white';
+                
+                // Show all 5 cards
+                allCards.innerHTML = '';
+                previousCardValues.forEach(card => {
+                    const cardElement = createCardElement(card);
+                    cardElement.classList.add('text-2xl', 'mx-1');
+                    allCards.appendChild(cardElement);
+                });
+            }
+            
+            function createCardElement(card) {
+                const cardElement = document.createElement('div');
+                const isRed = card.suit === '♦' || card.suit === '♥';
+                const colorClass = isRed ? 'card-red' : 'card-black';
+                
+                cardElement.className = `text-5xl font-bold ${colorClass} card-bg`;
+                cardElement.textContent = `${card.value}${card.suit}`;
+                
+                return cardElement;
+            }
+            
+            function getRemainingSuits() {
+                const remainingCards = deck.slice(currentCardIndex);
+                const suitsPresent = new Set(remainingCards.map(card => card.suit));
+                return Array.from(suitsPresent);
+            }
+        });
+    </script>
+</body>
+</html>
